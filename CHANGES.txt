@@ -12,6 +12,10 @@ Version 1.1.1
 2025.01.25 (1.1.1)
   * Made non-embedded screen size 640x480.
 
+  * "Start" appears as "Start Over" if a game is active.
+
+  * Highlight "Start [Over]" and "Continue" when pointer hovers over them.
+
 
 2002.04.20 (1.1.0)
   * Lowered volume of game-over sound (it was ear-piercing on the Zaurus!)

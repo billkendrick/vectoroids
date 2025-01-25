@@ -705,7 +705,7 @@ int main(int argc, char * argv[])
 
 int title(void)
 {
-  int done, quit;
+  int done, quit, hover;
   int i, snapped, angle, size, counter, x, y, xm, ym, z1, z2, z3;
   SDL_Event event;
   SDLKey key;
@@ -713,6 +713,7 @@ int title(void)
   char * titlestr = "VECTOROIDS";
   char str[64];
   letter_type letters[11];
+  color_type tmp_color;
 
 
   /* Reset letters: */
@@ -738,6 +739,7 @@ int title(void)
 
   done = 0;
   quit = 0;
+  hover = 0;
 
   do
   {
@@ -810,7 +812,7 @@ int title(void)
 	      event.button.x <= (WIDTH + 50) / 2 &&
 	      event.button.y >= 180 && event.button.y <= 195)
 	    {
-	      /* Start! */
+	      /* Start [Over] */
 	
 	      game_pending = 0;
   	      done = 1;
@@ -820,9 +822,30 @@ int title(void)
 	           event.button.y >= 200 && event.button.y <= 215 &&
 		   game_pending)
 	    {
+              /* Continue */
+
 	      done = 1;
 	    }
 	}
+      else if (event.type == SDL_MOUSEMOTION)
+        {
+	  if (event.motion.x >= (WIDTH - 50) / 2 &&
+	      event.motion.x <= (WIDTH + 50) / 2 &&
+	      event.motion.y >= 180 && event.motion.y <= 195)
+	    {
+              hover = 1;
+	    }
+	  else if (event.motion.x >= (WIDTH - 80) / 2 &&
+		   event.motion.x <= (WIDTH + 80) / 2 &&
+	           event.motion.y >= 200 && event.motion.y <= 215)
+	    {
+              hover = 2;
+	    }
+          else
+            {
+              hover = 0;
+            }
+        }
     }
 
 
@@ -934,11 +957,27 @@ int title(void)
       }
     }
 
-    
-    draw_text("START", (WIDTH - 50) / 2, 180, 5, mkcolor(0, 255, 0));
+
+    if (hover == 1)
+      tmp_color = mkcolor(255, 255, 255);
+    else
+      tmp_color = mkcolor(0, 255, 0);
     
     if (game_pending)
-      draw_text("CONTINUE", (WIDTH - 80) / 2, 200, 5, mkcolor(0, 255, 0));
+      {
+        draw_text("START OVER", (WIDTH - 100) / 2, 180, 5, tmp_color);
+
+        if (hover == 2)
+          tmp_color = mkcolor(255, 255, 255);
+        else
+          tmp_color = mkcolor(0, 255, 0);
+
+        draw_text("CONTINUE", (WIDTH - 80) / 2, 200, 5, tmp_color);
+      }
+    else
+      {
+        draw_text("START", (WIDTH - 50) / 2, 180, 5, tmp_color);
+      }
 
 
     /* (Giant rock) */
