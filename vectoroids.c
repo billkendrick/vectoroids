@@ -790,10 +790,37 @@ int title(void)
       {
         key = event.key.keysym.sym;
 
-	if (key == SDLK_SPACE)
+	if (key == SDLK_SPACE || key == SDLK_RETURN)
         {
+          if (hover == 1)
+          {
+            /* If hovering over "Start [Over]", start new game */
+            /* (if hovering over "Continue", or nothing in particular,
+               resume the paused game) */
+	    game_pending = 0;
+          }
 	  done = 1;
 	}
+        else if (key == SDLK_UP || key == SDLK_DOWN)
+        {
+          if (key == SDLK_UP)
+          {
+            hover = hover - 1;
+            if (hover < 1)
+              if (game_pending)
+                hover = 2;
+              else
+                hover = 1;
+          }
+          else if (key == SDLK_DOWN)
+          {
+            hover = hover + 1;
+            if ((hover == 2 && !game_pending) || hover > 2)
+              hover = 1;
+          }
+
+          SDL_WarpMouse(WIDTH / 2, 187 + (hover - 1) * 15);
+        }
 	else if (key == SDLK_ESCAPE)
 	{
 	  done = 1;
@@ -1032,6 +1059,8 @@ int title(void)
       }
   }
   while (!done);
+
+  SDL_WarpMouse(WIDTH - 5, HEIGHT - 5);
 
   return(quit);
 }
