@@ -20,7 +20,7 @@ SDL_LIB=$(shell sdl2-config --libs) $(MIXER) -lSDL2_image
 NOSOUNDFLAG=__SOUND
 MIXER=-lSDL2_mixer
 
-CFLAGS=-Wall -Wno-long-long -pedantic -ansi -O2 \
+CFLAGS=-Wall -Wno-long-long -pedantic -std=c99 -O2 \
 	$(shell sdl2-config --cflags) -D$(NOSOUNDFLAG) \
 	-DDATA_PREFIX=\"$(DATA_PREFIX)\" -DJOY_$(JOY) -D$(TARGET_DEF)
 

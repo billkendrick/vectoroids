@@ -16,6 +16,8 @@ Version 1.1.2
   * Game screen improvements:
     + Draw ships and bullets later (on top of other screen elements)
 
+  * Show version # in window title
+
 2025.01.25 (1.1.1)
   * Made non-embedded screen size 640x480.
 

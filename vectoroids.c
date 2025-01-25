@@ -611,9 +611,9 @@ int main(int argc, char *argv[])
 #ifndef _WIN32
   /* snprintf(statefile, sizeof(statefile), "%s/.vectoroids-state",
      getenv("HOME")); */
-  sprintf(statefile, "%s/.vectoroids-state", getenv("HOME"));
+  snprintf(statefile, sizeof(statefile), "%s/.vectoroids-state", getenv("HOME"));
 #else
-  sprintf(statefile, "vectoroids-state.dat");
+  snprintf(statefile, sizeof(statefile), "vectoroids-state.dat");
 #endif
 
   fi = fopen(statefile, "r");
@@ -979,22 +979,22 @@ int title(void)
       draw_centered_text("NEW BREED SOFTWARE", 155, 5, mkcolor(96, 96, 96));
 
 #ifndef EMBEDDED
-      sprintf(str, "VERSION %s   %s", VER_VERSION, VER_DATE);
+      snprintf(str, sizeof(str), "VERSION %s   %s", VER_VERSION, VER_DATE);
 #else
-      sprintf(str, "VER %s  %s", VER_VERSION, VER_DATE);
+      snprintf(str, sizeof(str), "VER %s  %s", VER_VERSION, VER_DATE);
 #endif
       draw_centered_text(str, (HEIGHT - 20), 5, mkcolor(96, 96, 96));
 
-      sprintf(str, "HIGH %.6d", high);
+      snprintf(str, sizeof(str), "HIGH %.6d", high);
       draw_text(str, (WIDTH - 110) / 2, 5, 5, mkcolor(128, 255, 255));
       draw_text(str, (WIDTH - 110) / 2 + 1, 6, 5, mkcolor(128, 255, 255));
 
       if (score != 0 && (score != high || (counter % 20) < 10))
       {
         if (game_pending == 0)
-          sprintf(str, "LAST %.6d", score);
+          snprintf(str, sizeof(str), "LAST %.6d", score);
         else
-          sprintf(str, "SCR  %.6d", score);
+          snprintf(str, sizeof(str), "SCR  %.6d", score);
         draw_text(str, (WIDTH - 110) / 2, 25, 5, mkcolor(128, 128, 255));
         draw_text(str, (WIDTH - 110) / 2 + 1, 26, 5, mkcolor(128, 128, 255));
       }
@@ -1766,11 +1766,11 @@ int game(void)
     /* Draw score: */
 
 #ifndef EMBEDDED
-    sprintf(str, "SCORE %.6d", score);
+    snprintf(str, sizeof(str), "SCORE %.6d", score);
     draw_text(str, 3, 3, 14, mkcolor(255, 255, 255));
     draw_text(str, 4, 4, 14, mkcolor(255, 255, 255));
 #else
-    sprintf(str, "%.6d", score);
+    snprintf(str, sizeof(str), "%.6d", score);
     draw_text(str, 3, 3, 10, mkcolor(255, 255, 255));
     draw_text(str, 4, 4, 10, mkcolor(255, 255, 255));
 #endif
@@ -1779,13 +1779,13 @@ int game(void)
     /* Level: */
 
 #ifndef EMBEDDED
-    sprintf(str, "LEVEL %d", level);
+    snprintf(str, sizeof(str), "LEVEL %d", level);
     draw_text(str, (WIDTH - strlen(str) * 14) / 2, 3, 14,
               mkcolor(255, 255, 255));
     draw_text(str, (WIDTH - strlen(str) * 14) / 2 + 1, 4, 14,
               mkcolor(255, 255, 255));
 #else
-    sprintf(str, "%d", level);
+    snprintf(str, sizeof(str), "%d", level);
     draw_text(str, (WIDTH - 14) / 2, 3, 10, mkcolor(255, 255, 255));
     draw_text(str, (WIDTH - 14) / 2 + 1, 4, 10, mkcolor(255, 255, 255));
 #endif
@@ -2339,7 +2339,6 @@ void setup(int argc, char *argv[])
 
 
   seticon();
-  /* SDL_WM_SetCaption("Vectoroids", "Vectoroids"); *//* FIXME */
 }
 
 
@@ -3134,7 +3133,7 @@ void reset_level(void)
   }
 
 
-  sprintf(zoom_str, "LEVEL %d", level);
+  snprintf(zoom_str, sizeof(zoom_str), "LEVEL %d", level);
 
   text_zoom = ZOOM_START;
 }
@@ -3157,22 +3156,16 @@ void show_usage(FILE *f, char *prg)
 }
 
 
-/* Set video mode: */
-/* Contributed to "Defendguin" by Mattias Engdegard <f91-men@nada.kth.se> */
+/* Set video mode & window caption: */
 
 void set_vid_mode(unsigned flags)
 {
+  char str[64];
+
   /* Prefer 16bpp, but also prefer native modes to emulated 16bpp. */
 
-  /* SDL1.2 version... */
-  /*
-     int depth;
-
-     depth = SDL_VideoModeOK(WIDTH, HEIGHT, 16, flags);
-     return depth ? SDL_SetVideoMode(WIDTH, HEIGHT, depth, flags) : NULL;
-   */
-
-  window = SDL_CreateWindow("Vectoroids",
+  snprintf(str, sizeof(str), "Vectorids %s", VER_VERSION);
+  window = SDL_CreateWindow(str,
                             SDL_WINDOWPOS_UNDEFINED,
                             SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, flags);
   renderer = SDL_CreateRenderer(window, -1, 0);
