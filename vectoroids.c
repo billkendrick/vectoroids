@@ -1737,98 +1737,6 @@ int game(void)
     }
 
 
-    /* Draw ship: */
-
-    if (player_alive)
-    {
-      draw_segment(SHIP_RADIUS, 0, mkcolor(128, 128, 255),
-                   SHIP_RADIUS / 2, 135, mkcolor(0, 0, 192),
-                   x >> 4, y >> 4, angle);
-
-      draw_segment(SHIP_RADIUS / 2, 135, mkcolor(0, 0, 192),
-                   0, 0, mkcolor(64, 64, 230), x >> 4, y >> 4, angle);
-
-      draw_segment(0, 0, mkcolor(64, 64, 230),
-                   SHIP_RADIUS / 2, 225, mkcolor(0, 0, 192),
-                   x >> 4, y >> 4, angle);
-
-      draw_segment(SHIP_RADIUS / 2, 225, mkcolor(0, 0, 192),
-                   SHIP_RADIUS, 0, mkcolor(128, 128, 255),
-                   x >> 4, y >> 4, angle);
-
-
-      /* Draw flame: */
-
-      if (up_pressed)
-      {
-#ifndef EMBEDDED
-        draw_segment(0, 0, mkcolor(255, 255, 255),
-                     (rand() % 20), 180, mkcolor(255, 0, 0),
-                     x >> 4, y >> 4, angle);
-#else
-        i = (rand() % 128) + 128;
-
-        draw_segment(0, 0, mkcolor(255, i, i),
-                     (rand() % 20), 180, mkcolor(255, i, i),
-                     x >> 4, y >> 4, angle);
-#endif
-      }
-    }
-
-
-    /* Draw bullets: */
-
-    for (i = 0; i < NUM_BULLETS; i++)
-    {
-      if (bullets[i].timer >= 0)
-      {
-        draw_line(bullets[i].x - (rand() % 3) - bullets[i].xm * 2,
-                  bullets[i].y - (rand() % 3) - bullets[i].ym * 2,
-                  mkcolor((rand() % 3) * 128,
-                          (rand() % 3) * 128,
-                          (rand() % 3) * 128),
-                  bullets[i].x + (rand() % 3) - bullets[i].xm * 2,
-                  bullets[i].y + (rand() % 3) - bullets[i].ym * 2,
-                  mkcolor((rand() % 3) * 128,
-                          (rand() % 3) * 128, (rand() % 3) * 128));
-
-        draw_line(bullets[i].x + (rand() % 3) - bullets[i].xm * 2,
-                  bullets[i].y - (rand() % 3) - bullets[i].ym * 2,
-                  mkcolor((rand() % 3) * 128,
-                          (rand() % 3) * 128,
-                          (rand() % 3) * 128),
-                  bullets[i].x - (rand() % 3) - bullets[i].xm * 2,
-                  bullets[i].y + (rand() % 3) - bullets[i].ym * 2,
-                  mkcolor((rand() % 3) * 128,
-                          (rand() % 3) * 128, (rand() % 3) * 128));
-
-
-
-        draw_thick_line(bullets[i].x - (rand() % 5),
-                        bullets[i].y - (rand() % 5),
-                        mkcolor((rand() % 3) * 128 + 64,
-                                (rand() % 3) * 128 + 64,
-                                (rand() % 3) * 128 + 64),
-                        bullets[i].x + (rand() % 5),
-                        bullets[i].y + (rand() % 5),
-                        mkcolor((rand() % 3) * 128 + 64,
-                                (rand() % 3) * 128 + 64,
-                                (rand() % 3) * 128 + 64));
-
-        draw_thick_line(bullets[i].x + (rand() % 5),
-                        bullets[i].y - (rand() % 5),
-                        mkcolor((rand() % 3) * 128 + 64,
-                                (rand() % 3) * 128 + 64,
-                                (rand() % 3) * 128 + 64),
-                        bullets[i].x - (rand() % 5),
-                        bullets[i].y + (rand() % 5),
-                        mkcolor((rand() % 3) * 128 + 64,
-                                (rand() % 3) * 128 + 64,
-                                (rand() % 3) * 128 + 64));
-      }
-    }
-
-
     /* Draw asteroids: */
 
     for (i = 0; i < NUM_ASTEROIDS; i++)
@@ -1927,6 +1835,99 @@ int game(void)
                    WIDTH - 10 - i * 10, 20, 90);
 
     }
+
+
+    /* Draw ship: */
+
+    if (player_alive)
+    {
+      draw_segment(SHIP_RADIUS, 0, mkcolor(128, 128, 255),
+                   SHIP_RADIUS / 2, 135, mkcolor(0, 0, 192),
+                   x >> 4, y >> 4, angle);
+
+      draw_segment(SHIP_RADIUS / 2, 135, mkcolor(0, 0, 192),
+                   0, 0, mkcolor(64, 64, 230), x >> 4, y >> 4, angle);
+
+      draw_segment(0, 0, mkcolor(64, 64, 230),
+                   SHIP_RADIUS / 2, 225, mkcolor(0, 0, 192),
+                   x >> 4, y >> 4, angle);
+
+      draw_segment(SHIP_RADIUS / 2, 225, mkcolor(0, 0, 192),
+                   SHIP_RADIUS, 0, mkcolor(128, 128, 255),
+                   x >> 4, y >> 4, angle);
+
+
+      /* Draw flame: */
+
+      if (up_pressed)
+      {
+#ifndef EMBEDDED
+        draw_segment(0, 0, mkcolor(255, 255, 255),
+                     (rand() % 20), 180, mkcolor(255, 0, 0),
+                     x >> 4, y >> 4, angle);
+#else
+        i = (rand() % 128) + 128;
+
+        draw_segment(0, 0, mkcolor(255, i, i),
+                     (rand() % 20), 180, mkcolor(255, i, i),
+                     x >> 4, y >> 4, angle);
+#endif
+      }
+    }
+
+
+    /* Draw bullets: */
+
+    for (i = 0; i < NUM_BULLETS; i++)
+    {
+      if (bullets[i].timer >= 0)
+      {
+        draw_line(bullets[i].x - (rand() % 3) - bullets[i].xm * 2,
+                  bullets[i].y - (rand() % 3) - bullets[i].ym * 2,
+                  mkcolor((rand() % 3) * 128,
+                          (rand() % 3) * 128,
+                          (rand() % 3) * 128),
+                  bullets[i].x + (rand() % 3) - bullets[i].xm * 2,
+                  bullets[i].y + (rand() % 3) - bullets[i].ym * 2,
+                  mkcolor((rand() % 3) * 128,
+                          (rand() % 3) * 128, (rand() % 3) * 128));
+
+        draw_line(bullets[i].x + (rand() % 3) - bullets[i].xm * 2,
+                  bullets[i].y - (rand() % 3) - bullets[i].ym * 2,
+                  mkcolor((rand() % 3) * 128,
+                          (rand() % 3) * 128,
+                          (rand() % 3) * 128),
+                  bullets[i].x - (rand() % 3) - bullets[i].xm * 2,
+                  bullets[i].y + (rand() % 3) - bullets[i].ym * 2,
+                  mkcolor((rand() % 3) * 128,
+                          (rand() % 3) * 128, (rand() % 3) * 128));
+
+
+
+        draw_thick_line(bullets[i].x - (rand() % 5),
+                        bullets[i].y - (rand() % 5),
+                        mkcolor((rand() % 3) * 128 + 64,
+                                (rand() % 3) * 128 + 64,
+                                (rand() % 3) * 128 + 64),
+                        bullets[i].x + (rand() % 5),
+                        bullets[i].y + (rand() % 5),
+                        mkcolor((rand() % 3) * 128 + 64,
+                                (rand() % 3) * 128 + 64,
+                                (rand() % 3) * 128 + 64));
+
+        draw_thick_line(bullets[i].x + (rand() % 5),
+                        bullets[i].y - (rand() % 5),
+                        mkcolor((rand() % 3) * 128 + 64,
+                                (rand() % 3) * 128 + 64,
+                                (rand() % 3) * 128 + 64),
+                        bullets[i].x - (rand() % 5),
+                        bullets[i].y + (rand() % 5),
+                        mkcolor((rand() % 3) * 128 + 64,
+                                (rand() % 3) * 128 + 64,
+                                (rand() % 3) * 128 + 64));
+      }
+    }
+
 
 
     /* Zooming level effect: */
