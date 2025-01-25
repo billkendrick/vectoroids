@@ -202,7 +202,7 @@ int trig[12] = {
 
 /* Characters: */
 
-int char_vectors[36][5][4] = {
+int char_vectors[37][5][4] = {
   {
     /* 0 */
     { 0, 0, 1, 0 },
@@ -525,6 +525,12 @@ int char_vectors[36][5][4] = {
     { 0, 2, 1, 2 },
     { -1, -1, -1, -1 },
     { -1, -1, -1, -1 }
+  },
+
+  {
+    /* . */
+    { 0, 1, 1, 1 },
+    { -1, -1, -1, -1 }
   }
 };
 
@@ -705,7 +711,7 @@ int title(void)
   SDLKey key;
   Uint32 now_time, last_time;
   char * titlestr = "VECTOROIDS";
-  char str[20];
+  char str[64];
   letter_type letters[11];
 
 
@@ -908,6 +914,9 @@ int title(void)
       draw_centered_text("BY BILL KENDRICK", 140, 5,
 		mkcolor(128, 128,128));
       draw_centered_text("NEW BREED SOFTWARE", 155, 5,
+		mkcolor(96, 96, 96));
+      sprintf(str, "VERSION %s    %s", VER_VERSION, VER_DATE);
+      draw_centered_text(str, (HEIGHT - 20), 5,
 		mkcolor(96, 96, 96));
 
       sprintf(str, "HIGH %.6d", high);
@@ -2899,6 +2908,8 @@ void draw_char(char c, int x, int y, int r, color_type cl)
     v = (c - '0');
   else if (c >= 'A' && c <= 'Z')
     v = (c - 'A') + 10;
+  else if (c == '.')
+    v = 36;
   
   
   if (v != -1)
