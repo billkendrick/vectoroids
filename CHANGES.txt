@@ -4,9 +4,13 @@ by Bill Kendrick
 bill@newbreedsoftware.com
 http://www.newbreedsoftware.com/vectoroids/
 
-April 20, 2002
+January 25, 2024
 
-Version 1.1.0
+Version 1.1.1
+
+
+2025.01.25 (1.1.1)
+  * Made non-embedded screen size 640x480.
 
 
 2002.04.20 (1.1.0)

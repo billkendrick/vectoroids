@@ -66,7 +66,7 @@
 #define FPS 50
 
 #ifndef EMBEDDED
-  #define WIDTH 480
+  #define WIDTH 640
   #define HEIGHT 480
 #else
   #define WIDTH 240
