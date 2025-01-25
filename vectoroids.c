@@ -1068,6 +1068,43 @@ int title(void)
 
 /* --- GAME --- */
 
+#define TAP_V_TOP (HEIGHT / 2)
+#define TAP_V_MID (HEIGHT / 2 + HEIGHT / 6)
+#define TAP_V_BOT (HEIGHT / 2 + HEIGHT / 3)
+#define TAP_V_FARBOT (HEIGHT - 1)
+
+#define TAP_H_FARLFT 0
+#define TAP_H_LFT (WIDTH / 3)
+#define TAP_H_CTR (WIDTH / 2)
+#define TAP_H_RGT (WIDTH * 2 / 3)
+#define TAP_H_FARRGT (WIDTH - 1)
+
+void handle_click_tap_controls(int x, int y, int *lft, int *rgt, int *up,
+                               int *fire)
+{
+  *up = 0;
+  *lft = 0;
+  *rgt = 0;
+  *fire = 0;
+
+  if (y >= TAP_V_TOP && y < TAP_V_MID && x >= TAP_H_LFT && x < TAP_H_RGT)
+  {
+    *up = 1;
+  }
+  else if (y >= TAP_V_MID && y < TAP_V_BOT)
+  {
+    if (x >= TAP_H_FARLFT && x < TAP_H_CTR)
+      *lft = 1;
+    else if (x >= TAP_H_CTR && x < TAP_H_FARRGT)
+      *rgt = 1;
+  }
+  else if (y >= TAP_V_BOT && y < TAP_V_FARBOT && x >= TAP_H_LFT
+           && x < TAP_H_RGT)
+  {
+    *fire = 1;
+  }
+}
+
 int game(void)
 {
   int done, quit, counter;
@@ -1079,6 +1116,8 @@ int game(void)
   int fire_pressed, firing;
   char str[32];
   Uint32 now_time, last_time;
+  color_type tmp_color;
+  int tap_area_brightness;
 
 
   done = 0;
@@ -1091,6 +1130,7 @@ int game(void)
   shift_pressed = 0;
   fire_pressed = 0;
   firing = 0;
+  tap_area_brightness = 0;
 
   if (game_pending == 0)
   {
@@ -1290,6 +1330,31 @@ int game(void)
         }
       }
 #endif
+      else if (event.type == SDL_MOUSEMOTION)
+      {
+        tap_area_brightness = 255;
+
+        if (SDL_GetMouseState(NULL, NULL) != 0)
+          handle_click_tap_controls(event.motion.x, event.motion.y,
+                                    &left_pressed, &right_pressed,
+                                    &up_pressed, &fire_pressed);
+      }
+      else if (event.type == SDL_MOUSEBUTTONDOWN)
+      {
+        tap_area_brightness = 255;
+
+        handle_click_tap_controls(event.button.x, event.button.y,
+                                  &left_pressed, &right_pressed, &up_pressed,
+                                  &fire_pressed);
+      }
+      else if (event.type == SDL_MOUSEBUTTONUP)
+      {
+        left_pressed = 0;
+        right_pressed = 0;
+        up_pressed = 0;
+        fire_pressed = 0;
+        firing = 0;
+      }
     }
 
 
@@ -1426,6 +1491,37 @@ int game(void)
 
     SDL_BlitSurface(bkgd, NULL, screen, NULL);
 
+
+    /* Draw click/tap-based control area */
+    if (tap_area_brightness >= 128)
+    {
+      tmp_color =
+        mkcolor(tap_area_brightness >> 1, tap_area_brightness >> 1,
+                tap_area_brightness);
+
+      draw_line(TAP_H_LFT, TAP_V_TOP, tmp_color, TAP_H_RGT, TAP_V_TOP,
+                tmp_color);
+      draw_line(TAP_H_FARLFT, TAP_V_MID, tmp_color, TAP_H_FARRGT, TAP_V_MID,
+                tmp_color);
+      draw_line(TAP_H_FARLFT, TAP_V_BOT, tmp_color, TAP_H_FARRGT, TAP_V_BOT,
+                tmp_color);
+
+      draw_line(TAP_H_LFT, TAP_V_TOP, tmp_color, TAP_H_LFT, TAP_V_MID,
+                tmp_color);
+      draw_line(TAP_H_RGT, TAP_V_TOP, tmp_color, TAP_H_RGT, TAP_V_MID,
+                tmp_color);
+
+      draw_line(TAP_H_CTR, TAP_V_MID, tmp_color, TAP_H_CTR, TAP_V_BOT,
+                tmp_color);
+
+      draw_line(TAP_H_LFT, TAP_V_BOT, tmp_color, TAP_H_LFT, TAP_V_FARBOT,
+                tmp_color);
+      draw_line(TAP_H_RGT, TAP_V_BOT, tmp_color, TAP_H_RGT, TAP_V_FARBOT,
+                tmp_color);
+
+      /* It fades out if you're not using it */
+      tap_area_brightness--;
+    }
 
     /* Move ship: */
 
@@ -2839,7 +2935,10 @@ void draw_asteroid(int size, int x, int y, int angle, shape_type *shape)
 
 void playsound(int snd)
 {
-  int which, i;
+  int which;
+#ifndef EMBEDDED
+  int i;
+#endif
 
 #ifndef NOSOUND
   if (use_sound)

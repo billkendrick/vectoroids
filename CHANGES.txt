@@ -24,6 +24,8 @@ Version 1.1.1
 
     + Show "SCORE" and "LEVEL" next to the numbers at the top.
 
+    + On-screen zone for controlling ship with touch/tap or mouse.
+
   * 3 bullets allowed on non-embedded (desktop/etc.) version, too.
 
   * Improved firing controls (avoid multiple bullets at once w/ joystick).

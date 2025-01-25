@@ -155,47 +155,52 @@ Title Screen:
   be blinking.)
 
     * To begin a game, click the word "START" with the mouse.
-      Unless the "CONTINUE" option is available, pressing [Space] on
-      the keyboard, or pushing any button on the joystick will also start
-      a new game.
 
-    * To continue a paused game, click "CONTINUE" with the mouse.
-      If this option is available, pressing [Space] or pushing a
-      joystick button will also continue the current game.
+    * If a paused game is available, the word "CONTINUE" will appear
+      (and it will show "START OVER" for the other option).
+
+    * Click either option (you may use the [Up] and [Down] keys to
+      select) to either start a new game, or continue a paused game,
+      respectively.
 
     * To quit, either close the game's window, or press the [Escape] key
       on your keyboard.  (Note: Any currently-paused game will be saved,
       so when you run Vectoroids again later, you can continue where you
       left of.)
 
-
 The Game:
 ---------
   Game Controls:
   --------------
-    The game can be played with either the keyboard, or a joystick.
-    (The joystick must have at least two axes (directions) and
-    two fire buttons.)
+    The game can be played with either the keyboard, a joystick
+    (the joystick must have at least two axes (directions) and
+    two fire buttons), or using a mouse or touchscreen by
+    clicking/tapping in the plus (+) shaped control zone at the
+    lower part of the screen.
 
     * [Left] / [Right] on the keyboard
       [Left] / [Right] on the joystick
+      Left / Right sides of the on-screen control zone
 
       Rotate ship counter-clockwise and clockwise, respectively.
 
 
     * [Up] on the keyboard
       [Fire-A] on the joystick
+      Upper area of the on-screen control zone
 
       Thrusts the ship in the direction it is currently facing.
 
 
     * [Space] on the keyboard
       [Fire-B] on the joystick
+      Lower area of the on-screen control zone
 
       Fires a bullet in the direction the ship is facing.
 
 
     * Either [Shift] on the keyboard
+      Any other [Fire] on the joystick
 
       Re-spawns your ship after you die, even if the game thinks there
       are still too many asteroids near the center of the screen...
