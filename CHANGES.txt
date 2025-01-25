@@ -28,6 +28,8 @@ Version 1.1.1
 
   * Improved firing controls (avoid multiple bullets at once w/ joystick).
 
+  * Cleaned up warnings; ran `indent` against source (see `indent.sh`)
+
 
 2002.04.20 (1.1.0)
   * Lowered volume of game-over sound (it was ear-piercing on the Zaurus!)
