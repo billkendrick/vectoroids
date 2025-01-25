@@ -2347,8 +2347,6 @@ void setup(int argc, char *argv[])
 void seticon(void)
 {
 #ifndef EMBEDDED
-  int masklen;
-  Uint8 *mask;
   SDL_Surface *icon;
 
 
@@ -2364,22 +2362,13 @@ void seticon(void)
     exit(1);
   }
 
-
-  /* Create mask: */
-
-  masklen = (((icon->w) + 7) / 8) * (icon->h);
-  mask = malloc(masklen * sizeof(Uint8));
-  memset(mask, 0xFF, masklen);
-
-
   /* Set icon: */
 
-  /* SDL_WM_SetIcon(icon, mask); *//* FIXME */
+  SDL_SetWindowIcon(window, icon);
 
 
-  /* Free icon surface & mask: */
+  /* Free icon surface: */
 
-  free(mask);
   SDL_FreeSurface(icon);
 #endif
 }
