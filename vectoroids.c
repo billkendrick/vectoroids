@@ -625,28 +625,28 @@ int main(int argc, char *argv[])
 
     if (tmp_str != NULL)
     {
-    /* Grab statefile version: */
+      /* Grab statefile version: */
 
       tmp_str = fgets(buf, sizeof(buf), fi);
     }
 
     if (tmp_str != NULL)
     {
-    buf[strlen(buf) - 1] = '\0';
+      buf[strlen(buf) - 1] = '\0';
 
-    if (strcmp(buf, STATE_FORMAT_VERSION) != 0)
-    {
-      fprintf(stderr, "Vectoroids state file format has been updated.\n"
-              "Old game state is unreadable.  Sorry!\n");
-    }
-    else
-    {
+      if (strcmp(buf, STATE_FORMAT_VERSION) != 0)
+      {
+        fprintf(stderr, "Vectoroids state file format has been updated.\n"
+                "Old game state is unreadable.  Sorry!\n");
+      }
+      else
+      {
         size_t sz;              /* FIXME: Should pay attention to whether we got what we expected! -bjk 2025.01.24 */
-      game_pending = fgetc(fi);
-      lives = fgetc(fi);
-      level = fgetc(fi);
-      player_alive = fgetc(fi);
-      player_die_timer = fgetc(fi);
+        game_pending = fgetc(fi);
+        lives = fgetc(fi);
+        level = fgetc(fi);
+        player_alive = fgetc(fi);
+        player_die_timer = fgetc(fi);
         sz = fread(&score, sizeof(int), 1, fi);
         sz = fread(&high, sizeof(int), 1, fi);
         sz = fread(&x, sizeof(int), 1, fi);
@@ -809,7 +809,7 @@ int title(void)
         if (key == SDLK_SPACE || key == SDLK_RETURN)
         {
           if (hover == 1)
-        {
+          {
             /* If hovering over "Start [Over]", start new game */
             /* (if hovering over "Continue", or nothing in particular,
                resume the paused game) */
@@ -1053,7 +1053,7 @@ int title(void)
 
     /* Flush and pause! */
 
-    /* SDL_Flip(screen); */ /* SDL1.2 method */
+    /* SDL_Flip(screen); *//* SDL1.2 method */
     SDL_UpdateTexture(screenTexture, NULL, screen->pixels, screen->pitch);
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, bkgdTexture, NULL, NULL);
@@ -1982,7 +1982,7 @@ int game(void)
 
     /* Flush and pause! */
 
-    /* SDL_Flip(screen); */ /* SDL1.2 method */
+    /* SDL_Flip(screen); *//* SDL1.2 method */
     SDL_UpdateTexture(screenTexture, NULL, screen->pixels, screen->pitch);
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, bkgdTexture, NULL, NULL);
@@ -2338,7 +2338,7 @@ void setup(int argc, char *argv[])
 
 
   seticon();
-  /* SDL_WM_SetCaption("Vectoroids", "Vectoroids"); */ /* FIXME */
+  /* SDL_WM_SetCaption("Vectoroids", "Vectoroids"); *//* FIXME */
 }
 
 
@@ -2374,7 +2374,7 @@ void seticon(void)
 
   /* Set icon: */
 
-  /* SDL_WM_SetIcon(icon, mask); */ /* FIXME */
+  /* SDL_WM_SetIcon(icon, mask); *//* FIXME */
 
 
   /* Free icon surface & mask: */
@@ -3165,11 +3165,11 @@ void set_vid_mode(unsigned flags)
 
   /* SDL1.2 version... */
   /*
-  int depth;
+     int depth;
 
-  depth = SDL_VideoModeOK(WIDTH, HEIGHT, 16, flags);
-  return depth ? SDL_SetVideoMode(WIDTH, HEIGHT, depth, flags) : NULL;
-  */
+     depth = SDL_VideoModeOK(WIDTH, HEIGHT, 16, flags);
+     return depth ? SDL_SetVideoMode(WIDTH, HEIGHT, depth, flags) : NULL;
+   */
 
   window = SDL_CreateWindow("Vectoroids",
                             SDL_WINDOWPOS_UNDEFINED,
