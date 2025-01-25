@@ -964,7 +964,12 @@ int title(void)
 		mkcolor(128, 128,128));
       draw_centered_text("NEW BREED SOFTWARE", 155, 5,
 		mkcolor(96, 96, 96));
-      sprintf(str, "VERSION %s    %s", VER_VERSION, VER_DATE);
+
+#ifndef EMBEDDED
+      sprintf(str, "VERSION %s   %s", VER_VERSION, VER_DATE);
+#else
+      sprintf(str, "VER %s  %s", VER_VERSION, VER_DATE);
+#endif
       draw_centered_text(str, (HEIGHT - 20), 5,
 		mkcolor(96, 96, 96));
 
@@ -3004,7 +3009,7 @@ void draw_char(char c, int x, int y, int r, color_type cl)
   else if (c == '.')
     v = 36;
   
-  
+
   if (v != -1)
     {
       for (i = 0; i < 5; i++)
@@ -3022,13 +3027,14 @@ void draw_char(char c, int x, int y, int r, color_type cl)
     }
 }
 
+#define CHAR_SPACING 4
 
 void draw_text(char * str, int x, int y, int s, color_type c)
 {
   int i;
 
   for (i = 0; i < strlen(str); i++)
-    draw_char(str[i], i * (s + 3) + x, y, s, c);
+    draw_char(str[i], i * (s + CHAR_SPACING) + x, y, s, c);
 }
 
 
@@ -3036,6 +3042,7 @@ void draw_thick_line(int x1, int y1, color_type c1,
 		     int x2, int y2, color_type c2)
 {
   draw_line(x1, y1, c1, x2, y2, c2);
+  draw_line(x1 + 1, y1, c1, x2 + 1, y2, c2);
   draw_line(x1 + 1, y1 + 1, c1, x2 + 1, y2 + 1, c2);
 }
 
@@ -3113,6 +3120,6 @@ SDL_Surface * set_vid_mode(unsigned flags)
 
 void draw_centered_text(char * str, int y, int s, color_type c)
 {
-  draw_text(str, (WIDTH - strlen(str) * (s + 3)) / 2, y, s, c);
+  draw_text(str, (WIDTH - strlen(str) * (s + CHAR_SPACING)) / 2, y, s, c);
 }
 
