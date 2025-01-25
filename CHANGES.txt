@@ -20,6 +20,14 @@ Version 1.1.1
 
     + [Up]/[Down] keys can be used to select items, too.
 
+  * Game screen improvements:
+
+    + Show "SCORE" and "LEVEL" next to the numbers at the top.
+
+  * 3 bullets allowed on non-embedded (desktop/etc.) version, too.
+
+  * Improved firing controls (avoid multiple bullets at once w/ joystick).
+
 
 2002.04.20 (1.1.0)
   * Lowered volume of game-over sound (it was ear-piercing on the Zaurus!)

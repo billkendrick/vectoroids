@@ -15,9 +15,9 @@
 #define VER_DATE "2025.01.24"
 
 #ifndef EMBEDDED
-#define STATE_FORMAT_VERSION "2001.12.01"
+#define STATE_FORMAT_VERSION "2025.01.24"
 #else
-#define STATE_FORMAT_VERSION "2001.12.01e"
+#define STATE_FORMAT_VERSION "2025.01.24e"
 #endif
 
 
@@ -38,11 +38,7 @@
 
 /* Constraints: */
 
-#ifndef EMBEDDED
-  #define NUM_BULLETS 2
-#else
-  #define NUM_BULLETS 3
-#endif
+#define NUM_BULLETS 3
 
 #ifndef EMBEDDED
   #define NUM_ASTEROIDS 20
@@ -563,7 +559,7 @@ void draw_segment(int r1, int a1,
 		  int r2, int a2,
 		  color_type c2,
 		  int cx, int cy, int ang);
-void add_bullet(int x, int y, int a, int xm, int ym);
+int add_bullet(int x, int y, int a, int xm, int ym);
 void add_asteroid(int x, int y, int xm, int ym, int size);
 void add_bit(int x, int y, int xm, int ym);
 void draw_asteroid(int size, int x, int y, int angle, shape_type * shape);
@@ -1080,7 +1076,8 @@ int game(void)
   SDL_Event event;
   SDLKey key;
   int left_pressed, right_pressed, up_pressed, shift_pressed;
-  char str[10];
+  int fire_pressed, firing;
+  char str[32];
   Uint32 now_time, last_time;
   
   
@@ -1092,6 +1089,8 @@ int game(void)
   right_pressed = 0;
   up_pressed = 0;
   shift_pressed = 0;
+  fire_pressed = 0;
+  firing = 0;
 
   if (game_pending == 0)
   {  
@@ -1184,12 +1183,11 @@ int game(void)
 		      
 		      up_pressed = 1;
 		    }
-		  else if ((key == SDLK_SPACE) &&
-		           player_alive)
+		  else if (key == SDLK_SPACE)
 		    {
 		      /* Fire a bullet! */
-		     
-		      add_bullet(x >> 4, y >> 4, angle, xm, ym);
+
+		      fire_pressed = 1;
 		    }
 		  
 		  if (key == SDLK_LSHIFT ||
@@ -1216,6 +1214,11 @@ int game(void)
 		    {
 		      up_pressed = 0;
 		    }
+		  else if (key == SDLK_SPACE)
+		    {
+		      fire_pressed = 0;
+                      firing = 0;
+		    }
 
 		  if (key == SDLK_LSHIFT ||
 		      key == SDLK_RSHIFT)
@@ -1234,7 +1237,7 @@ int game(void)
 		{
 		  /* Fire a bullet! */
 		  
-		  add_bullet(x >> 4, y >> 4, angle, xm, ym);
+		  fire_pressed = 1;
 		}
 	      else if (event.jbutton.button == JOY_A)
 		{
@@ -1249,7 +1252,14 @@ int game(void)
 	    }
 	  else if (event.type == SDL_JOYBUTTONUP)
 	    {
-	      if (event.jbutton.button == JOY_A)
+	      if (event.jbutton.button == JOY_B)
+		{
+		  /* Release firebutton: */
+		  
+		  fire_pressed = 0;
+                  firing = 0;
+		}
+	      else if (event.jbutton.button == JOY_A)
 		{
 		  /* Stop thrust: */
 		  
@@ -1257,6 +1267,8 @@ int game(void)
 		}
 	      else if (event.jbutton.button != JOY_B)
 		{
+                  /* Any other button: respawn */
+
 		  shift_pressed = 0;
 		}
 	    }
@@ -1300,6 +1312,14 @@ int game(void)
 	    angle = angle - 360;
 	}
 
+      /* Fire bullets */
+      if (fire_pressed && player_alive)
+	{
+          if (!firing)
+          {
+            firing = add_bullet(x >> 4, y >> 4, angle, xm, ym);
+          }
+        }
 
       /* Thrust ship: */
       
@@ -1748,7 +1768,7 @@ int game(void)
       /* Draw score: */
      
 #ifndef EMBEDDED
-      sprintf(str, "%.6d", score);
+      sprintf(str, "SCORE %.6d", score);
       draw_text(str, 3, 3, 14, mkcolor(255, 255, 255));
       draw_text(str, 4, 4, 14, mkcolor(255, 255, 255));
 #else
@@ -1761,9 +1781,9 @@ int game(void)
       /* Level: */
       
 #ifndef EMBEDDED
-      sprintf(str, "%d", level);
-      draw_text(str, (WIDTH - 14) / 2, 3, 14, mkcolor(255, 255, 255));
-      draw_text(str, (WIDTH - 14) / 2 + 1, 4, 14, mkcolor(255, 255, 255));
+      sprintf(str, "LEVEL %d", level);
+      draw_text(str, (WIDTH - strlen(str) * 14) / 2, 3, 14, mkcolor(255, 255, 255));
+      draw_text(str, (WIDTH - strlen(str) * 14) / 2 + 1, 4, 14, mkcolor(255, 255, 255));
 #else
       sprintf(str, "%d", level);
       draw_text(str, (WIDTH - 14) / 2, 3, 10, mkcolor(255, 255, 255));
@@ -2719,7 +2739,7 @@ void draw_segment(int r1, int a1,
 
 /* Add a bullet: */
 
-void add_bullet(int x, int y, int a, int xm, int ym)
+int add_bullet(int x, int y, int a, int xm, int ym)
 {
   int i, found;
   
@@ -2748,6 +2768,8 @@ void add_bullet(int x, int y, int a, int xm, int ym)
       
       playsound(SND_BULLET);
     }
+
+  return (found != -1);
 }
 
 
