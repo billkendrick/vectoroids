@@ -8,11 +8,11 @@
   bill@newbreedsoftware.com
   http://www.newbreedsoftware.com/vectoroids/
   
-  November 30, 2001 - January 24, 2025
+  November 30, 2001 - January 25, 2025
 */
 
-#define VER_VERSION "1.1.1"
-#define VER_DATE "2025.01.24"
+#define VER_VERSION "1.1.2"
+#define VER_DATE "2025.01.25"
 
 #ifndef EMBEDDED
 #define STATE_FORMAT_VERSION "2025.01.24"
@@ -24,10 +24,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <SDL.h>
-#include <SDL_image.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #ifndef NOSOUND
-#include <SDL_mixer.h>
+#include <SDL2/SDL_mixer.h>
 #endif
 
 
@@ -168,7 +168,12 @@ char *mus_game_name = DATA_PREFIX "music/decision.s3m";
 
 /* Globals: */
 
-SDL_Surface *screen, *bkgd;
+SDL_Window *window;
+SDL_Renderer *renderer;
+SDL_Surface *bkgd;
+SDL_Texture *bkgdTexture;
+SDL_Surface *screen;
+SDL_Texture *screenTexture;
 #ifndef NOSOUND
 Mix_Chunk *sounds[NUM_SOUNDS];
 Mix_Music *game_music;
@@ -577,7 +582,7 @@ void draw_thick_line(int x1, int y1, color_type c1,
 void reset_level(void);
 void show_version(void);
 void show_usage(FILE * f, char *prg);
-SDL_Surface *set_vid_mode(unsigned flags);
+void set_vid_mode(unsigned flags);
 void draw_centered_text(char *str, int y, int s, color_type c);
 
 
@@ -620,28 +625,28 @@ int main(int argc, char *argv[])
 
     if (tmp_str != NULL)
     {
-      /* Grab statefile version: */
+    /* Grab statefile version: */
 
       tmp_str = fgets(buf, sizeof(buf), fi);
     }
 
     if (tmp_str != NULL)
     {
-      buf[strlen(buf) - 1] = '\0';
+    buf[strlen(buf) - 1] = '\0';
 
-      if (strcmp(buf, STATE_FORMAT_VERSION) != 0)
-      {
-        fprintf(stderr, "Vectoroids state file format has been updated.\n"
-                "Old game state is unreadable.  Sorry!\n");
-      }
-      else
-      {
+    if (strcmp(buf, STATE_FORMAT_VERSION) != 0)
+    {
+      fprintf(stderr, "Vectoroids state file format has been updated.\n"
+              "Old game state is unreadable.  Sorry!\n");
+    }
+    else
+    {
         size_t sz;              /* FIXME: Should pay attention to whether we got what we expected! -bjk 2025.01.24 */
-        game_pending = fgetc(fi);
-        lives = fgetc(fi);
-        level = fgetc(fi);
-        player_alive = fgetc(fi);
-        player_die_timer = fgetc(fi);
+      game_pending = fgetc(fi);
+      lives = fgetc(fi);
+      level = fgetc(fi);
+      player_alive = fgetc(fi);
+      player_die_timer = fgetc(fi);
         sz = fread(&score, sizeof(int), 1, fi);
         sz = fread(&high, sizeof(int), 1, fi);
         sz = fread(&x, sizeof(int), 1, fi);
@@ -719,7 +724,7 @@ int title(void)
   int done, quit, hover;
   int i, snapped, angle, size, counter, x, y, xm, ym, z1, z2, z3;
   SDL_Event event;
-  SDLKey key;
+  SDL_Keycode key;
   Uint32 now_time, last_time;
   char *titlestr = "VECTOROIDS";
   char str[64];
@@ -804,7 +809,7 @@ int title(void)
         if (key == SDLK_SPACE || key == SDLK_RETURN)
         {
           if (hover == 1)
-          {
+        {
             /* If hovering over "Start [Over]", start new game */
             /* (if hovering over "Continue", or nothing in particular,
                resume the paused game) */
@@ -832,7 +837,7 @@ int title(void)
               hover = 1;
           }
 
-          SDL_WarpMouse(WIDTH / 2, 187 + (hover - 1) * 15);
+          SDL_WarpMouseInWindow(window, WIDTH / 2, 187 + (hover - 1) * 15);
         }
         else if (key == SDLK_ESCAPE)
         {
@@ -1048,7 +1053,12 @@ int title(void)
 
     /* Flush and pause! */
 
-    SDL_Flip(screen);
+    /* SDL_Flip(screen); */ /* SDL1.2 method */
+    SDL_UpdateTexture(screenTexture, NULL, screen->pixels, screen->pitch);
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, bkgdTexture, NULL, NULL);
+    SDL_RenderCopy(renderer, screenTexture, NULL, NULL);
+    SDL_RenderPresent(renderer);
 
     now_time = SDL_GetTicks();
 
@@ -1059,7 +1069,7 @@ int title(void)
   }
   while (!done);
 
-  SDL_WarpMouse(WIDTH - 5, HEIGHT - 5);
+  SDL_WarpMouseInWindow(window, WIDTH - 5, HEIGHT - 5);
 
   return (quit);
 }
@@ -1111,7 +1121,7 @@ int game(void)
   int i, j;
   int num_asteroids_alive;
   SDL_Event event;
-  SDLKey key;
+  SDL_Keycode key;
   int left_pressed, right_pressed, up_pressed, shift_pressed;
   int fire_pressed, firing;
   char str[32];
@@ -1972,7 +1982,12 @@ int game(void)
 
     /* Flush and pause! */
 
-    SDL_Flip(screen);
+    /* SDL_Flip(screen); */ /* SDL1.2 method */
+    SDL_UpdateTexture(screenTexture, NULL, screen->pixels, screen->pitch);
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, bkgdTexture, NULL, NULL);
+    SDL_RenderCopy(renderer, screenTexture, NULL, NULL);
+    SDL_RenderPresent(renderer);
 
     now_time = SDL_GetTicks();
 
@@ -2186,7 +2201,7 @@ void setup(int argc, char *argv[])
 
   if (fullscreen)
   {
-    screen = set_vid_mode(SDL_FULLSCREEN | SDL_HWSURFACE);
+    set_vid_mode(SDL_WINDOW_FULLSCREEN_DESKTOP);
 
     if (screen == NULL)
     {
@@ -2201,7 +2216,7 @@ void setup(int argc, char *argv[])
 
   if (!fullscreen)
   {
-    screen = set_vid_mode(0);
+    set_vid_mode(0);
 
     if (screen == NULL)
     {
@@ -2229,7 +2244,7 @@ void setup(int argc, char *argv[])
     exit(1);
   }
 
-  bkgd = SDL_DisplayFormat(tmp);
+  bkgd = SDL_ConvertSurfaceFormat(tmp, SDL_PIXELFORMAT_RGB888, 0);
   if (bkgd == NULL)
   {
     fprintf(stderr,
@@ -2239,6 +2254,7 @@ void setup(int argc, char *argv[])
             "%s\n\n", SDL_GetError());
     exit(1);
   }
+  bkgdTexture = SDL_CreateTextureFromSurface(renderer, bkgd);
 
   SDL_FreeSurface(tmp);
 
@@ -2322,7 +2338,7 @@ void setup(int argc, char *argv[])
 
 
   seticon();
-  SDL_WM_SetCaption("Vectoroids", "Vectoroids");
+  /* SDL_WM_SetCaption("Vectoroids", "Vectoroids"); */ /* FIXME */
 }
 
 
@@ -2358,7 +2374,7 @@ void seticon(void)
 
   /* Set icon: */
 
-  SDL_WM_SetIcon(icon, mask);
+  /* SDL_WM_SetIcon(icon, mask); */ /* FIXME */
 
 
   /* Free icon surface & mask: */
@@ -3143,14 +3159,29 @@ void show_usage(FILE *f, char *prg)
 /* Set video mode: */
 /* Contributed to "Defendguin" by Mattias Engdegard <f91-men@nada.kth.se> */
 
-SDL_Surface *set_vid_mode(unsigned flags)
+void set_vid_mode(unsigned flags)
 {
   /* Prefer 16bpp, but also prefer native modes to emulated 16bpp. */
 
+  /* SDL1.2 version... */
+  /*
   int depth;
 
   depth = SDL_VideoModeOK(WIDTH, HEIGHT, 16, flags);
   return depth ? SDL_SetVideoMode(WIDTH, HEIGHT, depth, flags) : NULL;
+  */
+
+  window = SDL_CreateWindow("Vectoroids",
+                            SDL_WINDOWPOS_UNDEFINED,
+                            SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, flags);
+  renderer = SDL_CreateRenderer(window, -1, 0);
+  screen = SDL_CreateRGBSurface(0, WIDTH, HEIGHT, 32,
+                                0x00FF0000,
+                                0x0000FF00, 0x000000FF, 0xFF000000);
+  screenTexture = SDL_CreateTexture(renderer,
+                                    SDL_PIXELFORMAT_ARGB8888,
+                                    SDL_TEXTUREACCESS_STREAMING,
+                                    WIDTH, HEIGHT);
 }
 
 

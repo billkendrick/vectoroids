@@ -6,9 +6,9 @@ by Bill Kendrick
 bill@newbreedsoftware.com
 http://www.newbreedsoftware.com/vectoroids/
 
-November 30, 2001 - January 24, 2025
+November 30, 2001 - January 25, 2025
 
-Version 1.1.1
+Version 1.1.2
 
 
 About:
@@ -26,13 +26,10 @@ Installation Procedure:
 -----------------------
   Requirements:
   -------------
-    "Vectoroids" uses the Simple DirectMedia Layer multimedia library
-    (aka "libSDL"), as well as two helper libraries:
-    "SDL_image" and, optionally (for music and sound) "SDL_mixer".
+    "Vectoroids" uses the Simple DirectMedia Layer multimedia library,
+    version 2 (aka "SDL2"), as well as two helper libraries:
+    "SDL2_image" and, optionally (for music and sound) "SDL2_mixer".
 
-    It was originally written when SDL1.2 was the latest version
-    (as of 2025, SDL3 is now available), and currently still uses that
-    version.
 
     All three of these are available from the official SDL website:
 

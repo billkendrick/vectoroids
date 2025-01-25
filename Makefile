@@ -6,7 +6,7 @@
 # bill@newbreedsoftware.com
 # http://www.newbreedsoftware.com/vectoroids/
 
-# November 30, 2001 - April 13, 2002
+# November 30, 2001 - January 25, 2025
 
 
 PREFIX=/usr/local
@@ -15,13 +15,13 @@ BIN_PREFIX=$(PREFIX)/bin
 DATA_PREFIX=$(PREFIX)/share/vectoroids/
 JOY=YES
 TARGET_DEF=LINUX
-SDL_LIB=$(shell sdl-config --libs) $(MIXER) -lSDL_image
+SDL_LIB=$(shell sdl2-config --libs) $(MIXER) -lSDL2_image
 
 NOSOUNDFLAG=__SOUND
-MIXER=-lSDL_mixer
+MIXER=-lSDL2_mixer
 
 CFLAGS=-Wall -Wno-long-long -pedantic -ansi -O2 \
-	$(shell sdl-config --cflags) -D$(NOSOUNDFLAG) \
+	$(shell sdl2-config --cflags) -D$(NOSOUNDFLAG) \
 	-DDATA_PREFIX=\"$(DATA_PREFIX)\" -DJOY_$(JOY) -D$(TARGET_DEF)
 
 
