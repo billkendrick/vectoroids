@@ -1,14 +1,14 @@
 README.txt for "Vectoroids"
 
-(Based on "Agendaroids")
+(Based on "Agendaroids", in turn loosely based on "Asteroids", Atari Inc. 1979)
 
 by Bill Kendrick
 bill@newbreedsoftware.com
 http://www.newbreedsoftware.com/vectoroids/
 
-November 30, 2001 - April 20, 2002
+November 30, 2001 - January 24, 2025
 
-Version 1.1.0
+Version 1.1.1
 
 
 About:
@@ -30,9 +30,13 @@ Installation Procedure:
     (aka "libSDL"), as well as two helper libraries:
     "SDL_image" and, optionally (for music and sound) "SDL_mixer".
 
+    It was originally written when SDL1.2 was the latest version
+    (as of 2025, SDL3 is now available), and currently still uses that
+    version.
+
     All three of these are available from the official SDL website:
 
-        http://www.libsdl.org/
+        https://www.libsdl.org/
 
 
   Compilation:
@@ -279,11 +283,5 @@ Credits:
 Contact Information:
 --------------------
   Bill Kendrick
-  675 Alvarado Ave., Apt. #27
-  Davis, Calif.
-  95616-0620
-  USA
-
   Email: bill@newbreedsoftware.com
-  Phone: 530-759-1019
 

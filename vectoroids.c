@@ -8,11 +8,11 @@
   bill@newbreedsoftware.com
   http://www.newbreedsoftware.com/vectoroids/
   
-  November 30, 2001 - April 20, 2002
+  November 30, 2001 - January 24, 2025
 */
 
-#define VER_VERSION "1.1.0"
-#define VER_DATE "2002.04.20"
+#define VER_VERSION "1.1.1"
+#define VER_DATE "2025.01.24"
 
 #ifndef EMBEDDED
 #define STATE_FORMAT_VERSION "2001.12.01"
