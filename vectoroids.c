@@ -8,11 +8,11 @@
   bill@newbreedsoftware.com
   http://www.newbreedsoftware.com/vectoroids/
   
-  November 30, 2001 - January 25, 2025
+  November 30, 2001 - January 30, 2025
 */
 
-#define VER_VERSION "1.1.2"
-#define VER_DATE "2025.01.25"
+#define VER_VERSION "1.1.3"
+#define VER_DATE "2025.01.30"
 
 #ifndef EMBEDDED
 #define STATE_FORMAT_VERSION "2025.01.24"
@@ -69,6 +69,8 @@
 #define HEIGHT 320
 #endif
 
+
+Uint8 drawn_at[HEIGHT + 1][WIDTH + 1];
 
 
 enum
@@ -945,6 +947,7 @@ int title(void)
     /* (Erase first) */
 
     SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+    memset(drawn_at, 0, sizeof(Uint8) * (HEIGHT + 1) * (WIDTH + 1));
 
 
     /* (Title) */
@@ -1500,6 +1503,7 @@ int game(void)
     /* Erase screen: */
 
     SDL_BlitSurface(bkgd, NULL, screen, NULL);
+    memset(drawn_at, 0, sizeof(Uint8) * (HEIGHT + 1) * (WIDTH + 1));
 
 
     /* Draw click/tap-based control area */
@@ -2706,10 +2710,12 @@ void drawvertline(int x, int y1, color_type c1, int y2, color_type c2)
 
   for (dy = y1; dy <= y2; dy++)
   {
-    putpixel(screen, x + 1, dy + 1, SDL_MapRGB(screen->format, 0, 0, 0));
+    if (drawn_at[dy + 1][x + 1] == 0)
+      putpixel(screen, x + 1, dy + 1, SDL_MapRGB(screen->format, 0, 0, 0));
 
     putpixel(screen, x, dy, SDL_MapRGB(screen->format,
                                        (Uint8) cr, (Uint8) cg, (Uint8) cb));
+    drawn_at[dy][x] = 1;
 
 #ifndef EMBEDDED
     cr = cr + rd;
