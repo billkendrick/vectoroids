@@ -1,0 +1,7 @@
+TODO for Vectoroids
+2025-03-02
+
+ * Move VERSION/etc. out of vectoroids.c and into Makefile
+ * Add Makefile target to build a release
+   + Make sure to avoid including .git folder <d'oh!>
+
